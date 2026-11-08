@@ -23,8 +23,8 @@ window.HCP = {
       line: 'Originates consumer concepts for a world with abundant intelligence.',
       statement: 'Backing the mind is standing support for Andrew Thomas to keep originating concepts — not one product, but the next one, and the one after that.',
       contact: 'drewthomasenterprises@gmail.com',
-      backMonthly: '', // Stripe Payment Link (recurring)
-      backOnce: '',    // Stripe Payment Link (one-off, customer chooses amount)
+      backMonthly: 'https://buy.stripe.com/fZueVe9WK9nJgBY9bk8ww04', // Stripe Payment Link (recurring)
+      backOnce: 'https://buy.stripe.com/fZu7sM6KybvRetQdrA8ww03',    // Stripe Payment Link (one-off, customer chooses amount)
       concepts: [
         {
           id: 'caster',
