@@ -1,0 +1,46 @@
+{
+  "entity": "Human Consumer Products",
+  "url": "https://humanconsumerproducts.com/",
+  "description": "Concepts from human minds, for humans. Original consumer concepts held, developed and licensed; each available to commission in stages.",
+  "contact": "drewthomasenterprises@gmail.com",
+  "minds": [
+    {
+      "name": "Andrew Thomas",
+      "place": "Leeds, UK",
+      "summary": "Originates consumer concepts for a world with abundant intelligence.",
+      "page": "https://humanconsumerproducts.com/#andrew-thomas",
+      "back_the_mind": "https://humanconsumerproducts.com/#andrew-thomas--back",
+      "contact": "drewthomasenterprises@gmail.com",
+      "concepts": [
+        {
+          "code": "HCP-001",
+          "title": "The caster",
+          "status": "Live demo",
+          "stage": "Concept",
+          "rights": "Held by originator",
+          "summary": "A creation device. Say what you want to exist and it forms in light above the table, for everyone at it. Shape it by hand, keep it, or send it to a screen.",
+          "demo": "https://humanconsumerproducts.com/#andrew-thomas--caster",
+          "brief": "https://humanconsumerproducts.com/#andrew-thomas--caster--brief",
+          "commission": "https://humanconsumerproducts.com/#andrew-thomas--caster--commission",
+          "brief_text": {
+            "The concept": "A stone, brass and sapphire puck about 110 mm across. You say what you want to exist and it forms in light above the caster, visible to everyone at the table. You shape it with your hands, feel its edges through ultrasound, keep it, or send it to a TV or another caster. The device is a caster; what it makes are casts.",
+            "Why now": "Intelligence is abundant, but what we make with it still passes through a laptop lid or a phone pane. Phones are windows you look into alone. The caster is a fire people gather around: a computer built for making things together, at the height of a table.",
+            "The field": [
+              "Hologram companions (Razer AVA, Everthine A1) are faces to talk to, not tools to make with.",
+              "OpenAI’s first device is reported to be puck-sized, with no screen.",
+              "Glasses-free holographic displays exist; none combine intelligence and hands.",
+              "Open position: make with it, in light, together."
+            ],
+            "First build": [
+              "Light-field glass aperture; the image rises out of the caster.",
+              "Hand tracking and an ultrasound haptic ring.",
+              "Far-field voice, on-device model, frontier models for generation.",
+              "Streams to TV and glasses. A brass ring cuts cameras and microphones in hardware."
+            ],
+            "The ask": "Co-commission a working rig and a looks-like prototype, built by a hardware studio against this brief. Commissioners receive first look, a seat in build reviews, and first right to license."
+          }
+        }
+      ]
+    }
+  ]
+}

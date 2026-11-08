@@ -1,0 +1,6 @@
+{
+  // Static site served by Cloudflare Workers. Every push to main deploys.
+  "name": "humanconsumerproducts",
+  "compatibility_date": "2026-11-01",
+  "assets": { "directory": "./public" }
+}
