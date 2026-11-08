@@ -11,7 +11,8 @@ window.HCP = {
     name: 'Human Consumer Products',
     domain: 'humanconsumerproducts.com',
     principal: 'Andrew Thomas',
-    contact: 'drewthomasenterprises@gmail.com'
+    contact: 'drewthomasenterprises@gmail.com',
+    admissionForm: 'https://formspree.io/f/mjyyqvqw'
   },
   minds: [
     {
@@ -22,7 +23,8 @@ window.HCP = {
       line: 'Originates consumer concepts for a world with abundant intelligence.',
       statement: 'Backing the mind is standing support for Andrew Thomas to keep originating concepts — not one product, but the next one, and the one after that.',
       contact: 'drewthomasenterprises@gmail.com',
-      backLink: '', // Stripe Payment Link, e.g. 'https://buy.stripe.com/...'
+      backMonthly: '', // Stripe Payment Link (recurring)
+      backOnce: '',    // Stripe Payment Link (one-off, customer chooses amount)
       concepts: [
         {
           id: 'caster',
@@ -61,7 +63,7 @@ window.HCP = {
     ,{
       slug: 'first-last', admitted: false, name: 'First Last', place: 'City, Country',
       line: 'One line on what they originate.', statement: 'Why backing this mind matters.',
-      contact: 'their@email.com', backLink: 'https://buy.stripe.com/...',
+      contact: 'their@email.com', backMonthly: 'https://buy.stripe.com/...', backOnce: 'https://buy.stripe.com/...',
       concepts: [
         { id: 'concept-name', code: 'HCP-002', title: 'Concept title', status: 'Live demo',
           stage: 'Concept', rights: 'Held by originator', headline: 'Short line.', summary: 'What it is.',

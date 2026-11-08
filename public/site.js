@@ -25,6 +25,19 @@
     return '<dl class="kv">' + rows.map(function (r) { return '<div><dt>' + esc(r[0]) + '</dt><dd>' + r[1] + '</dd></div>'; }).join('') + '</dl>';
   }
 
+  function field(n, label, type, req) { return '<label class="f"><span>' + esc(label) + '</span><input name="' + n + '" type="' + type + '"' + (req ? ' required' : '') + '></label>'; }
+  function area(n, label, req) { return '<label class="f"><span>' + esc(label) + '</span><textarea name="' + n + '" rows="4"' + (req ? ' required' : '') + '></textarea></label>'; }
+  function wireForm() {
+    var f = document.getElementById('admit'); if (!f) return;
+    var st = document.getElementById('admit-status');
+    f.addEventListener('submit', function (e) {
+      e.preventDefault(); st.textContent = 'Sending…';
+      fetch(f.action, { method: 'POST', body: new FormData(f), headers: { Accept: 'application/json' } })
+        .then(function (r) { if (!r.ok) throw 0; f.innerHTML = '<h3>Received.</h3><p>Your submission is with the principal for sign-off. You will hear back by email.</p>'; })
+        .catch(function () { st.textContent = 'Not sent. Please try again, or write to ' + H.entity.contact + '.'; });
+    });
+  }
+
   function setNav(m) {
     var items = [['#index', 'Index', 'index']];
     if (m) {
@@ -74,7 +87,13 @@
       '<li><div><h3>Payment link</h3><p>You provide your own payment link privately. Backers pay you directly.</p></div></li>' +
       '<li><div><h3>Registry entry</h3><p>Your concepts receive codes and go live at humanconsumerproducts.com.</p></div></li>' +
       '</ol>' +
-      '<div class="row"><a class="btn" href="' + mail(H.entity.contact, 'Admission — Human Consumer Products') + '">Submit</a><span class="mono small">' + esc(H.entity.contact) + '</span></div>'
+      '<form id="admit" class="card" style="gap:16px" action="' + esc(H.entity.admissionForm) + '" method="POST">' +
+      '<h3>Submission</h3>' +
+      field('name', 'Name', 'text', true) + field('email', 'Email', 'email', true) + field('place', 'Where you are', 'text', false) +
+      area('mind', 'Who you are, and what you originate', true) + area('concept', 'The first concept you would bring', true) +
+      field('link', 'A link to your work (optional)', 'url', false) +
+      '<input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">' +
+      '<div class="row"><button class="btn" type="submit">Submit for sign-off</button><span id="admit-status" class="mono small" role="status"></span></div></form>'
     );
   }
 
@@ -83,7 +102,7 @@
       '<p class="kick">Mind · ' + esc(m.place) + '</p>' +
       h1(esc(m.name)) +
       '<p class="lead">' + esc(m.line) + '</p>' +
-      kv([['Concepts held', String((m.concepts || []).length)], ['Backing', m.backLink ? 'Open' : 'Opening']]) +
+      kv([['Concepts held', String((m.concepts || []).length)], ['Backing', (m.backMonthly || m.backOnce) ? 'Open' : 'Opening']]) +
       '<div class="row"><a class="btn" href="#' + m.slug + '--back">Back the mind</a></div>'
     ) + band('<p class="kick">Concepts</p><div class="grid">' + (m.concepts || []).map(function (c) {
       return '<div class="card"><span class="' + tagClass(c.status) + '">' + esc(c.status) + '</span><p class="mono small">' + esc(c.code) + '</p><h3>' + esc(c.title) + '</h3><p>' + esc(c.summary) + '</p><div class="row"><a href="#' + m.slug + '--' + c.id + '">Open</a><a href="#' + m.slug + '--' + c.id + '--brief">Brief</a><a href="#' + m.slug + '--' + c.id + '--commission">Commission</a></div></div>';
@@ -142,8 +161,11 @@
   }
 
   function backPage(m) {
-    var pay = m.backLink
-      ? '<a class="btn" href="' + esc(m.backLink) + '" target="_blank" rel="noopener">Back ' + esc(first(m.name)) + '</a>'
+    var links = [];
+    if (m.backMonthly) links.push('<a class="btn" href="' + esc(m.backMonthly) + '" target="_blank" rel="noopener">Back monthly</a>');
+    if (m.backOnce) links.push('<a class="btn ghost" href="' + esc(m.backOnce) + '" target="_blank" rel="noopener">Back once</a>');
+    var pay = links.length
+      ? links.join('')
       : '<a class="btn" href="' + mail(m.contact, 'Backing ' + m.name) + '">Register to back</a><span class="mono small">Payments opening shortly</span>';
     return page(
       '<p class="kick">Back the mind · ' + esc(m.name) + '</p>' + h1('Back the mind, not the product.') +
@@ -197,6 +219,7 @@
     app.innerHTML = html;
     window.scrollTo(0, 0);
     mountCaster();
+    wireForm();
   }
   window.addEventListener('hashchange', route);
   route();
