@@ -12,7 +12,8 @@ window.HCP = {
     domain: 'humanconsumerproducts.com',
     principal: 'Andrew Thomas',
     contact: 'drewthomasenterprises@gmail.com',
-    admissionForm: 'https://formspree.io/f/mjyyqvqw'
+    admissionForm: 'https://formspree.io/f/mjyyqvqw',
+    commissionForm: 'https://formspree.io/f/mdeerkoe'
   },
   minds: [
     {

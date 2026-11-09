@@ -27,14 +27,16 @@
 
   function field(n, label, type, req) { return '<label class="f"><span>' + esc(label) + '</span><input name="' + n + '" type="' + type + '"' + (req ? ' required' : '') + '></label>'; }
   function area(n, label, req) { return '<label class="f"><span>' + esc(label) + '</span><textarea name="' + n + '" rows="4"' + (req ? ' required' : '') + '></textarea></label>'; }
+  function select(n, label, opts, req) { return '<label class="f"><span>' + esc(label) + '</span><select name="' + n + '"' + (req ? ' required' : '') + '>' + (req ? '<option value="">Choose…</option>' : '') + opts.map(function (o) { return '<option>' + esc(o) + '</option>'; }).join('') + '</select></label>'; }
   function wireForm() {
-    var f = document.getElementById('admit'); if (!f) return;
-    var st = document.getElementById('admit-status');
-    f.addEventListener('submit', function (e) {
-      e.preventDefault(); st.textContent = 'Sending…';
-      fetch(f.action, { method: 'POST', body: new FormData(f), headers: { Accept: 'application/json' } })
-        .then(function (r) { if (!r.ok) throw 0; f.innerHTML = '<h3>Received.</h3><p>Your submission is with the principal for sign-off. You will hear back by email.</p>'; })
-        .catch(function () { st.textContent = 'Not sent. Please try again, or write to ' + H.entity.contact + '.'; });
+    Array.prototype.forEach.call(document.querySelectorAll('.hcp-form'), function (f) {
+      var st = f.querySelector('.hcp-status');
+      f.addEventListener('submit', function (e) {
+        e.preventDefault(); st.textContent = 'Sending…';
+        fetch(f.action, { method: 'POST', body: new FormData(f), headers: { Accept: 'application/json' } })
+          .then(function (r) { if (!r.ok) throw 0; f.innerHTML = '<h3>Received.</h3><p>' + esc(f.getAttribute('data-ok')) + '</p>'; })
+          .catch(function () { st.textContent = 'Not sent. Please try again, or write to ' + H.entity.contact + '.'; });
+      });
     });
   }
 
@@ -87,13 +89,13 @@
       '<li><div><h3>Payment link</h3><p>You provide your own payment link privately. Backers pay you directly.</p></div></li>' +
       '<li><div><h3>Registry entry</h3><p>Your concepts receive codes and go live at humanconsumerproducts.com.</p></div></li>' +
       '</ol>' +
-      '<form id="admit" class="card" style="gap:16px" action="' + esc(H.entity.admissionForm) + '" method="POST">' +
+      '<form class="card hcp-form" style="gap:16px" data-ok="Your submission is with the principal for sign-off. You will hear back by email." action="' + esc(H.entity.admissionForm) + '" method="POST">' +
       '<h3>Submission</h3>' +
       field('name', 'Name', 'text', true) + field('email', 'Email', 'email', true) + field('place', 'Where you are', 'text', false) +
       area('mind', 'Who you are, and what you originate', true) + area('concept', 'The first concept you would bring', true) +
       field('link', 'A link to your work (optional)', 'url', false) +
       '<input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">' +
-      '<div class="row"><button class="btn" type="submit">Submit for sign-off</button><span id="admit-status" class="mono small" role="status"></span></div></form>'
+      '<div class="row"><button class="btn" type="submit">Submit for sign-off</button><span class="mono small hcp-status" role="status"></span></div></form>'
     );
   }
 
@@ -156,7 +158,27 @@
       '<div class="card"><h3>Commissioners receive</h3><p>First look at every stage, a seat in build reviews, credit on the concept, and first right to license or partner.</p></div>' +
       '<div class="card"><h3>Funds</h3><p>Commissioners fund a named stage. Studios are paid against milestones. Each stage closes with a written build note.</p></div>' +
       '<div class="card"><h3>Rights</h3><p>The concept stays with ' + esc(m.name) + '. Every studio contract assigns the work it creates, so the licensable position is clear.</p></div></div>' +
-      '<div class="card" style="gap:14px"><h3>Enquiries</h3><p>From principals, product teams, studios, investors, or agents acting for them. State the stage of interest.</p><div class="row"><a class="btn" href="' + mail(m.contact, 'Commission enquiry — ' + c.code + ' ' + c.title) + '">Enquire</a><span class="mono small">' + esc(m.contact) + '</span></div></div>'
+      '<p class="kick" style="margin-top:12px">What happens next</p>' +
+      '<ol class="steps">' +
+      '<li><div><h3>Read</h3><p>Your enquiry goes to ' + esc(m.name) + ' directly, not to a sales inbox.</p></div></li>' +
+      '<li><div><h3>Scope</h3><p>A call to agree the stage, the studio, the budget and the timeline.</p></div></li>' +
+      '<li><div><h3>Terms</h3><p>Rights, credit and licence options put in writing before any money moves.</p></div></li>' +
+      '<li><div><h3>Build</h3><p>The stage begins. Commissioners receive build notes and a seat in reviews.</p></div></li>' +
+      '</ol>' +
+      '<form class="card hcp-form" style="gap:16px" data-ok="Received. ' + esc(first(m.name)) + ' will read it personally and reply by email." action="' + esc(H.entity.commissionForm) + '" method="POST">' +
+      '<h3>Commission enquiry</h3>' +
+      '<input type="hidden" name="concept" value="' + esc(c.code + ' ' + c.title) + '"><input type="hidden" name="mind" value="' + esc(m.name) + '">' +
+      field('name', 'Name', 'text', true) + field('email', 'Email', 'email', true) + field('organisation', 'Organisation', 'text', false) +
+      select('role', 'You are', ['A principal', 'A product team', 'A studio', 'An investor', 'An agent acting for a principal', 'Other'], true) +
+      select('stage', 'Stage of interest', ['Working rig', 'Looks-like, works-like prototype', 'Engineering prototype', 'Production partner', 'Not sure yet'], true) +
+      area('note', 'Anything you want to say', false) +
+      '<p class="kick" style="color:var(--mute);margin-top:6px;font-size:11px">Optional — helps us prepare</p>' +
+      select('budget', 'Indicative budget for the stage', ['Prefer not to say', 'Under £50k', '£50k–£250k', '£250k–£1m', '£1m+'], false) +
+      select('timeline', 'When would you want to start', ['Prefer not to say', 'Now', 'Within 3 months', 'Within a year', 'Exploring'], false) +
+      area('draw', 'What draws you to this concept', false) +
+      area('fit', 'What you would bring beyond funding (team, manufacturing, distribution, reach)', false) +
+      field('_gotcha', '', 'text', false).replace('<label class="f">', '<label class="f" aria-hidden="true" style="position:absolute;left:-9999px">') +
+      '<div class="row"><button class="btn" type="submit">Send enquiry</button><span class="mono small hcp-status" role="status"></span></div></form>'
     );
   }
 
